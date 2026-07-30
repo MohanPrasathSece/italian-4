@@ -11,6 +11,8 @@ import {
   FinalCTA,
   Footer,
 } from "@/components/landing/Closing";
+import { Contact } from "@/components/landing/Contact";
+import { AuthModalProvider } from "@/components/landing/AuthModal";
 
 const title = "Northvault — Invest Smarter in Digital Assets";
 const description =
@@ -56,6 +58,7 @@ function Index() {
   }, []);
 
   return (
+    <AuthModalProvider>
     <div className="relative min-h-screen overflow-x-clip bg-background">
       <Nav />
       <main>
@@ -70,8 +73,10 @@ function Index() {
         <Pricing />
         <FAQ />
         <FinalCTA />
+        <Contact />
       </main>
       <Footer />
     </div>
+    </AuthModalProvider>
   );
 }
