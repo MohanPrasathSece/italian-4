@@ -1,24 +1,77 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { Nav } from "@/components/landing/Nav";
+import { Hero } from "@/components/landing/Hero";
+import { Marquee, Features, WhyUs, Dashboard, Process } from "@/components/landing/Sections";
+import {
+  Testimonials,
+  Stats,
+  Pricing,
+  FAQ,
+  FinalCTA,
+  Footer,
+} from "@/components/landing/Closing";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+const title = "Northvault — Invest Smarter in Digital Assets";
+const description =
+  "Northvault is a calm, insured, institutional-grade platform for building long-term wealth across bitcoin, ethereum and managed digital asset portfolios.";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    let lenis: { raf: (t: number) => void; destroy: () => void } | null = null;
+    let cancelled = false;
+
+    import("lenis").then(({ default: Lenis }) => {
+      if (cancelled) return;
+      const instance = new Lenis({ duration: 1.15, smoothWheel: true });
+      lenis = instance;
+      const loop = (time: number) => {
+        instance.raf(time);
+        raf = requestAnimationFrame(loop);
+      };
+      raf = requestAnimationFrame(loop);
+    });
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+      lenis?.destroy();
+    };
+  }, []);
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="relative min-h-screen overflow-x-clip bg-background">
+      <Nav />
+      <main>
+        <Hero />
+        <Marquee />
+        <Features />
+        <WhyUs />
+        <Dashboard />
+        <Process />
+        <Testimonials />
+        <Stats />
+        <Pricing />
+        <FAQ />
+        <FinalCTA />
+      </main>
+      <Footer />
     </div>
   );
 }
