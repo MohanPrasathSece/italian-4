@@ -5,7 +5,7 @@ import dashboardImg from "@/assets/dashboard.jpg";
 import abstractImg from "@/assets/abstract.jpg";
 import { EASE, Magnetic } from "./primitives";
 
-const words = ["Invest", "Smarter.", "Build", "Wealth", "with", "Digital", "Assets."];
+const words = ["Investi", "meglio.", "Costruisci", "ricchezza", "con", "gli Asset", "Digitali."];
 
 export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
@@ -36,7 +36,7 @@ export function Hero() {
             transition={{ duration: 0.8, ease: EASE }}
             className="inline-flex items-center gap-2 rounded-[24px] border border-border bg-card px-4 py-2 text-xs font-medium text-primary shadow-float"
           >
-            <TrendingUp size={14} /> Regulated digital asset management
+            <TrendingUp size={14} /> Gestione regolamentata di asset digitali
           </motion.span>
 
           <h1 className="mt-8 text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.05] font-bold">
@@ -59,8 +59,7 @@ export function Hero() {
             transition={{ duration: 0.9, delay: 0.6, ease: EASE }}
             className="mt-8 max-w-md text-lg leading-relaxed text-muted-foreground"
           >
-            A calm, institutional-grade platform for building long-term wealth across bitcoin,
-            ethereum and curated digital asset portfolios.
+            Una piattaforma sicura e di livello istituzionale per costruire ricchezza a lungo termine con Bitcoin, Ethereum e portafogli di asset digitali selezionati.
           </motion.p>
 
           <motion.div
@@ -74,7 +73,7 @@ export function Hero() {
                 href="#cta"
                 className="group inline-flex items-center gap-2 rounded-[24px] bg-primary px-7 py-4 text-[15px] font-medium text-primary-foreground transition-all duration-500 hover:bg-primary-hover hover:shadow-lift"
               >
-                Start Investing
+                Inizia a Investire
                 <ArrowRight
                   size={17}
                   className="transition-transform duration-500 group-hover:translate-x-1"
@@ -86,7 +85,7 @@ export function Hero() {
                 href="#features"
                 className="inline-flex items-center gap-2 rounded-[24px] border border-border bg-card px-7 py-4 text-[15px] font-medium shadow-float transition-all duration-500 hover:-translate-y-0.5 hover:shadow-lift"
               >
-                Learn More
+                Scopri di Più
                 <ArrowUpRight size={17} />
               </a>
             </Magnetic>
@@ -102,7 +101,7 @@ export function Hero() {
           <div className="float-slow overflow-hidden rounded-[30px] border border-border bg-card shadow-lift">
             <img
               src={dashboardImg}
-              alt="Northvault portfolio dashboard showing total value, allocation and holdings"
+              alt="Dashboard del portafoglio Northvault che mostra valore totale, allocazione e partecipazioni"
               width={1408}
               height={1008}
               className="w-full"
@@ -110,9 +109,9 @@ export function Hero() {
           </div>
 
           <div className="float-slower absolute -top-8 -left-6 hidden w-52 rounded-[24px] border border-border bg-card p-5 shadow-float sm:block">
-            <p className="text-xs text-muted-foreground">Portfolio value</p>
+            <p className="text-xs text-muted-foreground">Valore del portafoglio</p>
             <p className="mt-1 font-display text-2xl font-bold">$58,742.82</p>
-            <p className="mt-1 text-xs font-medium text-primary">+8.47% this month</p>
+            <p className="mt-1 text-xs font-medium text-primary">+8.47% questo mese</p>
           </div>
 
           <div

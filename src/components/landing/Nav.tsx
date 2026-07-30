@@ -5,9 +5,9 @@ import { EASE, Magnetic } from "./primitives";
 import { useAuthModal } from "./AuthModal";
 
 const links = [
-  { id: "features", label: "Features" },
-  { id: "why-us", label: "Why Us" },
-  { id: "contact", label: "Contact" },
+  { id: "features", label: "Funzionalità" },
+  { id: "why-us", label: "Perché Noi" },
+  { id: "contact", label: "Contatti" },
 ];
 
 export function Nav() {
@@ -85,14 +85,14 @@ export function Nav() {
             onClick={() => auth.open("login")}
             className="hidden rounded-[24px] px-4 py-2.5 text-sm font-medium whitespace-nowrap text-muted-foreground transition-colors duration-300 hover:text-foreground sm:block"
           >
-            Sign in
+            Accedi
           </button>
           <Magnetic strength={0.25}>
             <button
               onClick={() => auth.open("signup")}
               className="rounded-[24px] bg-primary px-5 py-2.5 text-sm font-medium whitespace-nowrap text-primary-foreground transition-colors duration-300 hover:bg-primary-hover"
             >
-              Start Investing
+              Inizia a Investire
             </button>
           </Magnetic>
         </div>

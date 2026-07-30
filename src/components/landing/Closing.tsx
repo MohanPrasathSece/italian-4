@@ -7,30 +7,30 @@ import { CountUp, EASE, FloatCard, Magnetic, Reveal, SectionHeading } from "./pr
 const testimonials = [
   {
     n: "Amelia Hart",
-    r: "Founder, Halden Studio",
-    q: "The first crypto product that felt like private banking. Calm, clear, and genuinely well advised.",
+    r: "Fondatore, Halden Studio",
+    q: "Il primo prodotto crypto che sembra private banking. Tranquillo, chiaro e genuinamente ben consigliato.",
   },
   {
     n: "Daniel Osei",
     r: "CFO, Meridian Group",
-    q: "Reporting is immaculate. Our auditors had zero questions, which has never happened before.",
+    q: "I report sono immacolati. I nostri revisori non hanno fatto domande, una cosa mai successa prima.",
   },
   {
     n: "Sofia Lindqvist",
-    r: "Private investor",
-    q: "I stopped watching charts at midnight. The strategy does the work and the updates are actually useful.",
+    r: "Investitore privato",
+    q: "Ho smesso di guardare i grafici a mezzanotte. La strategia lavora per me e gli aggiornamenti sono davvero utili.",
   },
   {
     n: "Marcus Reid",
     r: "Partner, Blackpine",
-    q: "Custody, compliance and performance in one place. It replaced three separate relationships for us.",
+    q: "Custodia, conformità e performance in un unico posto. Per noi ha sostituito tre fornitori separati.",
   },
 ];
 
 export function Testimonials() {
   return (
     <section className="py-24">
-      <SectionHeading eyebrow="Clients" title="Trusted with serious capital" />
+      <SectionHeading eyebrow="Clienti" title="Affidato con capitali importanti" />
       <div className="group relative mt-16 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
         <div className="animate-marquee flex w-max gap-6 group-hover:[animation-play-state:paused]">
           {[...testimonials, ...testimonials].map((t, i) => (
@@ -65,10 +65,10 @@ export function Testimonials() {
 }
 
 const stats = [
-  { v: 4.2, suffix: "B", prefix: "$", d: 1, l: "Assets under management" },
-  { v: 38, suffix: "", d: 0, l: "Countries served" },
-  { v: 74000, suffix: "+", d: 0, l: "Clients invested" },
-  { v: 21.4, suffix: "%", d: 1, l: "Avg. annualised return" },
+  { v: 4.2, suffix: "B", prefix: "$", d: 1, l: "Asset in gestione" },
+  { v: 38, suffix: "", d: 0, l: "Paesi serviti" },
+  { v: 74000, suffix: "+", d: 0, l: "Clienti investiti" },
+  { v: 21.4, suffix: "%", d: 1, l: "Rendimento annuo medio" },
 ];
 
 export function Stats() {
@@ -92,26 +92,26 @@ const plans = [
   {
     n: "Core",
     p: "0.75",
-    d: "For first allocations into digital assets.",
-    f: ["Managed core portfolio", "Insured custody", "Quarterly reporting", "Email support"],
+    d: "Per le prime allocazioni in asset digitali.",
+    f: ["Portafoglio base gestito", "Custodia assicurata", "Report trimestrali", "Supporto via email"],
   },
   {
     n: "Private",
     p: "1.10",
-    d: "For investors building a serious position.",
+    d: "Per investitori che costruiscono una posizione seria.",
     f: [
-      "All Core strategies",
-      "Staking & yield sleeves",
-      "Named advisor",
-      "Tax-ready statements",
-      "Priority settlement",
+      "Tutte le strategie Core",
+      "Comparti staking e yield",
+      "Consulente dedicato",
+      "Dichiarazioni pronte per le tasse",
+      "Regolamento prioritario",
     ],
   },
   {
-    n: "Institutional",
-    p: "Custom",
-    d: "For funds, family offices and treasuries.",
-    f: ["Bespoke mandates", "Segregated accounts", "API & data feeds", "Dedicated desk"],
+    n: "Istituzionale",
+    p: "Personalizzato",
+    d: "Per fondi, family office e tesorerie.",
+    f: ["Mandati su misura", "Account segregati", "API e feed dati", "Desk dedicato"],
   },
 ];
 
@@ -119,9 +119,9 @@ export function Pricing() {
   return (
     <section id="pricing" className="scroll-mt-28 px-4 py-24">
       <SectionHeading
-        eyebrow="Pricing"
-        title="One transparent management fee"
-        description="No performance fees, no spread games, no exit charges. Billed annually on assets managed."
+        eyebrow="Prezzi"
+        title="Una sola commissione di gestione trasparente"
+        description="Nessuna commissione di performance, nessun gioco sugli spread, nessuna commissione di uscita. Fatturato annualmente sugli asset gestiti."
       />
       <div className="mx-auto mt-16 grid max-w-6xl items-center gap-6 lg:grid-cols-3">
         {plans.map((pl, i) => {
@@ -138,15 +138,15 @@ export function Pricing() {
             >
               {featured && (
                 <span className="mb-5 inline-flex rounded-[24px] bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground">
-                  Most chosen
+                  Più scelto
                 </span>
               )}
               <h3 className="text-[1.6rem] font-bold">{pl.n}</h3>
               <p className="mt-2 text-muted-foreground">{pl.d}</p>
               <p className="font-display mt-7 text-4xl font-bold">
-                {pl.p === "Custom" ? "Custom" : `${pl.p}%`}
-                {pl.p !== "Custom" && (
-                  <span className="text-base font-medium text-muted-foreground"> / year</span>
+                {pl.p === "Personalizzato" ? "Personalizzato" : `${pl.p}%`}
+                {pl.p !== "Personalizzato" && (
+                  <span className="text-base font-medium text-muted-foreground"> / anno</span>
                 )}
               </p>
               <ul className="mt-8 space-y-3">
@@ -165,7 +165,7 @@ export function Pricing() {
                     : "border border-border hover:bg-accent"
                 }`}
               >
-                {pl.p === "Custom" ? "Talk to us" : "Get started"}
+                {pl.p === "Personalizzato" ? "Parla con noi" : "Inizia"}
               </a>
             </FloatCard>
           );
@@ -177,24 +177,24 @@ export function Pricing() {
 
 const faqs = [
   {
-    q: "Who holds my assets?",
-    a: "Assets sit with regulated qualified custodians in segregated, multi-signature cold storage, insured against theft and key loss.",
+    q: "Chi custodisce i miei asset?",
+    a: "Gli asset si trovano presso depositari qualificati e regolamentati in celle frigorifere segregate multi-firma, assicurate contro il furto e la perdita delle chiavi.",
   },
   {
-    q: "What is the minimum investment?",
-    a: "Core opens from $5,000. Private is designed for allocations from $100,000, and Institutional mandates are quoted individually.",
+    q: "Qual è l'investimento minimo?",
+    a: "Il Core parte da $5.000. Il Private è progettato per allocazioni a partire da $100.000, e i mandati Istituzionali sono quotati individualmente.",
   },
   {
-    q: "Can I withdraw at any time?",
-    a: "Yes. There are no lock-ups or exit fees; withdrawals are typically settled to your bank within one business day.",
+    q: "Posso prelevare in qualsiasi momento?",
+    a: "Sì. Non ci sono lock-up o commissioni di uscita; i prelievi vengono generalmente accreditati in banca entro un giorno lavorativo.",
   },
   {
-    q: "How are returns reported for tax?",
-    a: "Every account produces tax-ready annual statements with realised gains, income and cost basis in your local currency.",
+    q: "Come vengono riportati i rendimenti per le tasse?",
+    a: "Ogni account produce resoconti annuali pronti per le tasse con plusvalenze, reddito e costi base nella tua valuta locale.",
   },
   {
-    q: "Is Northvault regulated?",
-    a: "We operate under a licensed investment firm, audited quarterly, with client money and assets held separately from our own.",
+    q: "Northvault è regolamentata?",
+    a: "Operiamo tramite una società di investimento con licenza, verificata trimestralmente, con fondi e asset dei clienti tenuti separati dai nostri.",
   },
 ];
 
@@ -202,7 +202,7 @@ export function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
   return (
     <section id="faq" className="scroll-mt-28 px-4 py-24">
-      <SectionHeading eyebrow="FAQ" title="Questions, answered plainly" />
+      <SectionHeading eyebrow="FAQ" title="Domande, risposte in modo chiaro" />
       <div className="mx-auto mt-14 max-w-3xl space-y-4">
         {faqs.map((f, i) => (
           <Reveal key={f.q} delay={i * 0.05}>
@@ -238,10 +238,10 @@ export function FinalCTA() {
       <Reveal>
         <div className="mx-auto max-w-5xl rounded-[40px] border border-border bg-card px-8 py-20 text-center shadow-lift md:px-16">
           <h2 className="mx-auto max-w-2xl text-[clamp(2.2rem,4.6vw,3.4rem)] leading-[1.05] font-bold">
-            Start building wealth with digital assets today
+            Inizia a costruire ricchezza con gli asset digitali oggi stesso
           </h2>
           <p className="mx-auto mt-6 max-w-lg text-lg text-muted-foreground">
-            Open an account in four minutes. Speak to an advisor whenever you want one.
+            Apri un account in quattro minuti. Parla con un consulente quando vuoi.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Magnetic>
@@ -249,7 +249,7 @@ export function FinalCTA() {
                 href="#cta"
                 className="group inline-flex items-center gap-2 rounded-[24px] bg-primary px-8 py-4 text-[15px] font-medium text-primary-foreground transition-all duration-500 hover:bg-primary-hover hover:shadow-lift"
               >
-                Start Investing
+                Inizia a Investire
                 <ArrowRight
                   size={17}
                   className="transition-transform duration-500 group-hover:translate-x-1"
@@ -269,23 +269,23 @@ export function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 border-t border-border pt-10 sm:flex-row">
         <p className="font-display font-bold">Northvault</p>
         <p className="text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Northvault Capital. Capital at risk.
+          © {new Date().getFullYear()} Northvault Capital. Capitale a rischio.
         </p>
         <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
           <a href="#features" className="transition-colors hover:text-primary">
-            Platform
+            Piattaforma
           </a>
           <a href="#pricing" className="transition-colors hover:text-primary">
-            Pricing
+            Prezzi
           </a>
           <a href="#faq" className="transition-colors hover:text-primary">
-            Support
+            Supporto
           </a>
           <Link to="/privacy" className="transition-colors hover:text-primary">
             Privacy
           </Link>
           <Link to="/terms" className="transition-colors hover:text-primary">
-            Terms
+            Termini
           </Link>
         </div>
       </div>

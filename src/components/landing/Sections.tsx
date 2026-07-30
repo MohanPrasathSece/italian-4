@@ -26,7 +26,7 @@ export function Marquee() {
   return (
     <section className="px-4 py-16">
       <p className="text-center text-xs font-medium tracking-[0.2em] text-muted-foreground uppercase">
-        Trusted by allocators at
+        Scelti dagli allocatori di
       </p>
       <div className="relative mx-auto mt-10 max-w-6xl overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
         <div className="animate-marquee flex w-max gap-16">
@@ -47,33 +47,33 @@ export function Marquee() {
 const features = [
   {
     icon: ShieldCheck,
-    title: "Insured custody",
-    body: "Assets held in segregated, multi-signature cold storage with institutional insurance cover.",
+    title: "Custodia assicurata",
+    body: "Gli asset sono conservati in celle frigorifere segregate multi-firma con copertura assicurativa istituzionale.",
   },
   {
     icon: LineChart,
-    title: "Managed strategies",
-    body: "Research-led portfolios rebalanced automatically as market structure shifts.",
+    title: "Strategie gestite",
+    body: "Portafogli basati sulla ricerca ribilanciati automaticamente in base ai cambiamenti della struttura del mercato.",
   },
   {
     icon: Wallet,
-    title: "Effortless funding",
-    body: "Fund by bank transfer or card and settle into your allocation within minutes.",
+    title: "Finanziamenti semplici",
+    body: "Finanzia tramite bonifico bancario o carta e ottieni l'assegnazione in pochi minuti.",
   },
   {
     icon: Layers,
-    title: "Deep diversification",
-    body: "Exposure across majors, staking yield and tokenised treasuries in one account.",
+    title: "Profonda diversificazione",
+    body: "Esposizione sui principali asset, rendimento dello staking e treasuries tokenizzati in un unico account.",
   },
   {
     icon: Lock,
-    title: "Compliance first",
-    body: "Fully licensed, audited quarterly and reported in a format your accountant will like.",
+    title: "La conformità prima di tutto",
+    body: "Con licenza completa, verificata trimestralmente e rendicontata in un formato adatto al tuo commercialista.",
   },
   {
     icon: Sparkles,
-    title: "Intelligent alerts",
-    body: "Quiet, meaningful signals - never noise - the moment your thesis needs attention.",
+    title: "Avvisi intelligenti",
+    body: "Segnali discreti e significativi - mai rumore - quando la tua tesi richiede attenzione.",
   },
 ];
 
@@ -81,9 +81,9 @@ export function Features() {
   return (
     <section id="features" className="scroll-mt-28 px-4 py-24">
       <SectionHeading
-        eyebrow="Capabilities"
-        title="Everything you need to invest with conviction"
-        description="A complete, quietly powerful platform designed around long-term outcomes rather than daily noise."
+        eyebrow="Funzionalità"
+        title="Tutto il necessario per investire con convinzione"
+        description="Una piattaforma completa e potente progettata per risultati a lungo termine, non per il rumore quotidiano."
       />
       <div className="mx-auto mt-16 grid max-w-6xl gap-6 md:grid-cols-2 lg:grid-cols-3">
         {features.map((f, i) => (
@@ -125,15 +125,15 @@ export function WhyUs() {
         <div>
           <SectionHeading
             align="left"
-            eyebrow="Why Northvault"
-            title="Built by people who manage capital for a living"
-            description="We combine private-bank discipline with the transparency digital assets should have had from the start."
+            eyebrow="Perché Northvault"
+            title="Costruito da chi gestisce capitali di professione"
+            description="Combiniamo la disciplina delle banche private con la trasparenza che gli asset digitali avrebbero dovuto avere sin dall'inizio."
           />
           <div className="mt-10 space-y-4">
             {[
-              { n: 12, suffix: " yrs", label: "Average team experience in asset management" },
-              { n: 100, suffix: "%", label: "Client assets held in insured cold storage" },
-              { n: 24, suffix: "/7", label: "Monitoring, with a named advisor on every account" },
+              { n: 12, suffix: " anni", label: "Esperienza media del team nella gestione patrimoniale" },
+              { n: 100, suffix: "%", label: "Asset dei clienti conservati in celle frigorifere assicurate" },
+              { n: 24, suffix: "/7", label: "Monitoraggio, con un consulente dedicato per ogni account" },
             ].map((s, i) => (
               <FloatCard key={s.label} delay={i * 0.08} className="flex items-center gap-6 p-7">
                 <p className="font-display min-w-[104px] text-3xl font-bold text-primary">
@@ -156,9 +156,9 @@ export function Dashboard() {
   return (
     <section id="dashboard" className="scroll-mt-28 px-4 py-24">
       <SectionHeading
-        eyebrow="The platform"
-        title="Your portfolio, beautifully understood"
-        description="One calm surface for performance, profit and allocation - no dashboards you need a manual for."
+        eyebrow="La piattaforma"
+        title="Il tuo portafoglio, ben compreso"
+        description="Un'unica interfaccia tranquilla per performance, profitti e allocazioni - nessuna dashboard per cui serva un manuale."
       />
 
       <Reveal delay={0.1}>
@@ -166,7 +166,7 @@ export function Dashboard() {
           <div className="rounded-[32px] border border-border p-8">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total portfolio value</p>
+                <p className="text-sm text-muted-foreground">Valore totale del portafoglio</p>
                 <p className="font-display mt-2 text-4xl font-bold">
                   $<CountUp to={58742.82} decimals={2} />
                 </p>
@@ -197,18 +197,18 @@ export function Dashboard() {
 
           <div className="grid gap-6">
             <div className="rounded-[32px] border border-border p-8">
-              <p className="text-sm text-muted-foreground">Realised profit</p>
+              <p className="text-sm text-muted-foreground">Profitto realizzato</p>
               <p className="font-display mt-2 text-3xl font-bold text-primary">
                 +$<CountUp to={12480} />
               </p>
             </div>
             <div className="rounded-[32px] border border-border p-8">
-              <p className="text-sm text-muted-foreground">Allocation</p>
+              <p className="text-sm text-muted-foreground">Allocazione</p>
               <div className="mt-5 space-y-4">
                 {[
                   { k: "Bitcoin", v: 60 },
                   { k: "Ethereum", v: 25 },
-                  { k: "Yield & treasuries", v: 15 },
+                  { k: "Rendimenti e treasuries", v: 15 },
                 ].map((a, i) => (
                   <div key={a.k}>
                     <div className="flex justify-between text-sm">
@@ -236,18 +236,18 @@ export function Dashboard() {
 }
 
 const steps = [
-  { t: "Open your account", d: "Verify in under four minutes with a passport or ID." },
-  { t: "Choose a strategy", d: "Answer six questions and we model a portfolio around your horizon." },
-  { t: "Fund securely", d: "Transfer from your bank; assets settle into insured custody." },
-  { t: "Compound quietly", d: "We rebalance, report and stay available. You get on with life." },
+  { t: "Apri il tuo account", d: "Verifica in meno di quattro minuti con passaporto o documento d'identità." },
+  { t: "Scegli una strategia", d: "Rispondi a sei domande e modelleremo un portafoglio in base al tuo orizzonte." },
+  { t: "Finanzia in sicurezza", d: "Trasferisci dalla tua banca; gli asset vengono custoditi in sicurezza assicurata." },
+  { t: "Componi tranquillamente", d: "Ribilanciamo, rendicontiamo e restiamo a disposizione. Tu vivi la tua vita." },
 ];
 
 export function Process() {
   return (
     <section id="process" className="scroll-mt-28 px-4 py-24">
       <SectionHeading
-        eyebrow="How it works"
-        title="Four steps from curious to invested"
+        eyebrow="Come funziona"
+        title="Quattro passi, dalla curiosità all'investimento"
       />
       <div className="relative mx-auto mt-16 max-w-3xl">
         <div className="absolute top-0 bottom-0 left-[27px] w-px bg-border md:left-1/2" />
@@ -258,7 +258,7 @@ export function Process() {
             >
               <div className="rounded-[32px] border border-border bg-card p-8 shadow-float transition-transform duration-500 hover:-translate-y-1.5 hover:shadow-lift">
                 <span className="font-display text-sm font-bold text-primary">
-                  Step {String(i + 1).padStart(2, "0")}
+                  Passo {String(i + 1).padStart(2, "0")}
                 </span>
                 <h3 className="mt-3 text-[1.35rem] font-bold">{s.t}</h3>
                 <p className="mt-2 leading-relaxed text-muted-foreground">{s.d}</p>

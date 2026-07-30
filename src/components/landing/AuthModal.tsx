@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState, type ReactNode }
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowUpRight, Loader2, CheckCircle2, Mail, Phone } from "lucide-react";
 import { CountryDropdown } from "./CountryDropdown";
+import { validatePhone } from "@/lib/validation";
 
 type Mode = "login" | "signup";
 type AuthCtx = { open: (mode?: Mode) => void; close: () => void };
@@ -61,6 +62,15 @@ function AuthModal({ mode, setMode, onClose }: { mode: Mode; setMode: (m: Mode) 
     setError("");
     setSuccess("");
 
+    if (mode === "signup") {
+      const phoneError = validatePhone(formData.phone, formData.country);
+      if (phoneError) {
+        setError(phoneError);
+        setLoading(false);
+        return;
+      }
+    }
+
     try {
       if (mode === "login") {
         const res = await fetch("/api/auth/login", {
@@ -72,13 +82,9 @@ function AuthModal({ mode, setMode, onClose }: { mode: Mode; setMode: (m: Mode) 
         
         if (res.ok) {
           localStorage.setItem("sessionToken", data.token);
-          setSubmitted(true);
-          setTimeout(() => window.location.href = "/dashboard", 4500);
+          window.location.href = "/dashboard";
         } else {
-          let errMsg = data.message || data.error || "Ein unerwarteter Fehler ist aufgetreten.";
-          if (res.status === 500 || errMsg.toLowerCase().includes("already") || errMsg.toLowerCase().includes("exist") || errMsg.toLowerCase().includes("contacted")) {
-            errMsg = "You have already contacted us. Please wait while our team reviews your request. We'll get back to you soon.";
-          }
+          const errMsg = data.message || data.error || "An unexpected error occurred during login.";
           setError(errMsg);
         }
       } else {
@@ -105,20 +111,13 @@ function AuthModal({ mode, setMode, onClose }: { mode: Mode; setMode: (m: Mode) 
           setSubmitted(true);
           setTimeout(() => window.location.href = "/dashboard", 4500);
         } else {
-          let errMsg = data.message || data.error || "An unexpected error occurred.";
-          if (res.status === 500 || errMsg.toLowerCase().includes("already") || errMsg.toLowerCase().includes("exist") || errMsg.toLowerCase().includes("contacted")) {
-            errMsg = "You have already contacted us. Please wait while our team reviews your request. We'll get back to you soon.";
-          }
+          const errMsg = data.message || data.error || "An unexpected error occurred.";
           setError(errMsg);
         }
       }
     } catch (err: any) {
       const rawMsg = (err?.message || err?.toString() || "");
-      if (rawMsg.toLowerCase().includes("already") || rawMsg.toLowerCase().includes("exist") || rawMsg.toLowerCase().includes("contacted")) {
-        setError("You have already contacted us. Please wait while our team reviews your request. We'll get back to you soon.");
-      } else {
-        setError("Ein unerwarteter Fehler beim Verbinden mit dem Server ist aufgetreten.");
-      }
+      setError(rawMsg || "Si è verificato un errore imprevisto durante la connessione al server.");
     } finally {
       setLoading(false);
     }
@@ -170,7 +169,7 @@ function AuthModal({ mode, setMode, onClose }: { mode: Mode; setMode: (m: Mode) 
                   transition={{ delay: 0.3 }}
                   className="font-display text-[1.75rem] font-bold tracking-tight mb-3"
                 >
-                  We've received your request!
+                  Abbiamo ricevuto la tua richiesta!
                 </motion.h2>
 
                 <motion.p
@@ -179,8 +178,8 @@ function AuthModal({ mode, setMode, onClose }: { mode: Mode; setMode: (m: Mode) 
                   transition={{ delay: 0.42 }}
                   className="text-muted-foreground text-[15px] leading-relaxed mb-8 max-w-sm"
                 >
-                  Thank you for reaching out. Our expert team will review your information and
-                  <span className="text-foreground font-medium"> contact you within 24 hours</span>.
+                  Grazie per averci contattato. Il nostro team di esperti esaminerà le tue informazioni e
+                  <span className="text-foreground font-medium"> ti contatterà entro 24 ore</span>.
                 </motion.p>
 
                 <motion.div
@@ -191,7 +190,7 @@ function AuthModal({ mode, setMode, onClose }: { mode: Mode; setMode: (m: Mode) 
                 >
                   <span className="flex items-center gap-2 rounded-full border border-border bg-accent px-4 py-2 text-xs text-muted-foreground">
                     <Mail className="h-3.5 w-3.5 text-primary" />
-                    Confirmation sent to your email
+                    Conferma inviata alla tua email
                   </span>
                 </motion.div>
                 
@@ -199,15 +198,15 @@ function AuthModal({ mode, setMode, onClose }: { mode: Mode; setMode: (m: Mode) 
                   onClick={() => window.location.href = "/dashboard"}
                   className="mt-2 inline-flex h-11 items-center justify-center gap-2 rounded-[24px] bg-primary px-8 text-sm font-medium text-primary-foreground transition-all hover:bg-primary-hover"
                 >
-                  Go to Dashboard
+                  Vai alla Dashboard
                 </button>
-                <p className="mt-3 text-xs text-muted-foreground">Redirecting you automatically...</p>
+                <p className="mt-3 text-xs text-muted-foreground">Reindirizzamento automatico...</p>
               </motion.div>
             ) : (
               <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-9">
                 <div className="flex items-center justify-between mb-8">
                   <h2 className="font-display text-[1.75rem] font-bold tracking-tight">
-                    {mode === "login" ? "Welcome back" : "Create account"}
+                    {mode === "login" ? "Bentornato" : "Crea un account"}
                   </h2>
                   <button
                     onClick={handleClose}
@@ -240,7 +239,7 @@ function AuthModal({ mode, setMode, onClose }: { mode: Mode; setMode: (m: Mode) 
                         value={formData.name}
                         onChange={e => setFormData({ ...formData, name: e.target.value })}
                         className={inputBase}
-                        placeholder="Full name"
+                        placeholder="Nome e cognome"
                       />
                     </div>
                   )}
@@ -253,7 +252,7 @@ function AuthModal({ mode, setMode, onClose }: { mode: Mode; setMode: (m: Mode) 
                       value={formData.email}
                       onChange={e => setFormData({ ...formData, email: e.target.value })}
                       className={inputBase}
-                      placeholder="Email address"
+                      placeholder="Indirizzo email"
                     />
                   </div>
 
@@ -274,7 +273,7 @@ function AuthModal({ mode, setMode, onClose }: { mode: Mode; setMode: (m: Mode) 
                             value={formData.phone}
                             onChange={e => setFormData({ ...formData, phone: e.target.value })}
                             className={inputBase}
-                            placeholder="Phone number"
+                            placeholder="Numero di telefono"
                           />
                         </div>
                       </div>
@@ -286,16 +285,16 @@ function AuthModal({ mode, setMode, onClose }: { mode: Mode; setMode: (m: Mode) 
                     disabled={loading}
                     className="mt-8 flex w-full items-center justify-center gap-2 rounded-[24px] bg-primary px-6 py-3.5 text-[15px] font-medium text-primary-foreground transition-all duration-300 hover:bg-primary-hover hover:shadow-lift disabled:opacity-50"
                   >
-                    {loading ? <Loader2 className="h-[18px] w-[18px] animate-spin" /> : mode === "login" ? "Sign in" : "Create account"}
+                    {loading ? <Loader2 className="h-[18px] w-[18px] animate-spin" /> : mode === "login" ? "Accedi" : "Crea un account"}
                     {!loading && <ArrowUpRight className="h-[18px] w-[18px]" />}
                   </button>
                 </form>
 
                 <div className="mt-8 text-center text-[14px] text-muted-foreground">
                   {mode === "login" ? (
-                    <p>Don't have an account? <button type="button" onClick={() => {setMode("signup"); setError("")}} className="text-primary font-medium hover:underline">Apply here</button></p>
+                    <p>Non hai un account? <button type="button" onClick={() => {setMode("signup"); setError("")}} className="text-primary font-medium hover:underline">Registrati qui</button></p>
                   ) : (
-                    <p>Already an investor? <button type="button" onClick={() => {setMode("login"); setError("")}} className="text-primary font-medium hover:underline">Sign in</button></p>
+                    <p>Sei già un investitore? <button type="button" onClick={() => {setMode("login"); setError("")}} className="text-primary font-medium hover:underline">Accedi</button></p>
                   )}
                 </div>
               </motion.div>

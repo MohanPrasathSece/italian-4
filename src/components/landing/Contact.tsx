@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle, Loader2, Send, Zap } from "lucide-react";
 import { useState } from "react";
 import { submitLead } from "@/lib/crmApi";
+import { validatePhone } from "@/lib/validation";
 
 // ─── Constants ─────────────────────────────────────────────────────
 
@@ -17,40 +18,16 @@ const INVESTMENT_OPTIONS = [
 ];
 
 const COUNTRY_OPTIONS = [
-  { value: "cy", label: "Cyprus" },
-  { value: "gb", label: "United Kingdom" },
-  { value: "us", label: "United States" },
-  { value: "de", label: "Germany" },
-  { value: "fr", label: "France" },
-  { value: "ae", label: "UAE" },
+  { value: "cy", label: "Cipro" },
+  { value: "gb", label: "Regno Unito" },
+  { value: "us", label: "Stati Uniti" },
+  { value: "de", label: "Germania" },
+  { value: "fr", label: "Francia" },
+  { value: "ae", label: "EAU" },
   { value: "sg", label: "Singapore" },
   { value: "au", label: "Australia" },
-  { value: "other", label: "Other" },
+  { value: "other", label: "Altro" },
 ];
-
-const COUNTRY_PHONE_PATTERNS: Record<string, { code: string; pattern: RegExp; example: string }> = {
-  IE: { code: "+353", pattern: /^8\d{8}$/, example: "87 123 4567" },
-  CH: { code: "+41", pattern: /^(\+41|0041|0)?[1-9]\d{8}$/, example: "079 123 45 67" },
-  FR: { code: "+33", pattern: /^(\+33|0033|0)?[1-9]\d{8}$/, example: "06 12 34 56 78" },
-  BE: { code: "+32", pattern: /^(\+32|0032|0)?[1-9]\d{8}$/, example: "0471 12 34 56" },
-  CA: { code: "+1", pattern: /^(\+1|001)?[2-9]\d{9}$/, example: "416 555 0123" },
-  US: { code: "+1", pattern: /^(\+1|001)?[2-9]\d{9}$/, example: "212 555 0123" },
-  GB: { code: "+44", pattern: /^(\+44|0044|0)?[1-9]\d{9,10}$/, example: "07700 900123" },
-  DE: { code: "+49", pattern: /^(\+49|0049|0)?[1-9]\d{8,11}$/, example: "0152 12345678" },
-  ES: { code: "+34", pattern: /^(\+34|0034|0)?[6-9]\d{8}$/, example: "612 345 678" },
-  IT: { code: "+39", pattern: /^(\+39|0039|0)?[3]\d{8,9}$/, example: "312 3456789" },
-  NL: { code: "+31", pattern: /^(\+31|0031|0)?[6]\d{8}$/, example: "06 12345678" },
-  SE: { code: "+46", pattern: /^(\+46|0046|0)?[7-9]\d{8}$/, example: "070 123 45 67" },
-  AU: { code: "+61", pattern: /^(\+61|0061|0)?[4]\d{8}$/, example: "0412 345 678" },
-  IN: { code: "+91", pattern: /^(\+91|0091|0)?[6-9]\d{9}$/, example: "98765 43210" },
-  AE: { code: "+971", pattern: /^(\+971|00971)?[5]\d{8}$/, example: "50 123 4567" },
-  SG: { code: "+65", pattern: /^(\+65|0065)?[8-9]\d{7}$/, example: "8123 4567" },
-  ZA: { code: "+27", pattern: /^(\+27|0027|0)?[6-8]\d{8}$/, example: "082 123 4567" },
-  BR: { code: "+55", pattern: /^(\+55|0055)?[1-9]\d{10}$/, example: "11 91234 5678" },
-  MX: { code: "+52", pattern: /^(\+52|0052)?[1-9]\d{10}$/, example: "55 1234 5678" },
-  JP: { code: "+81", pattern: /^(\+81|0081|0)?[7-9]\d{8,9}$/, example: "090 1234 5678" },
-  CY: { code: "+357", pattern: /^(\+357|00357)?[2-9]\d{7}$/, example: "99 123456" },
-};
 
 // ─── Types ─────────────────────────────────────────────────────────
 
@@ -86,16 +63,12 @@ export function Contact() {
 
   const validate = (): boolean => {
     const e: Partial<Record<keyof FormState, string>> = {};
-    if (!form.name.trim()) e.name = "Requis";
-    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) e.email = "E-mail valide requis";
+    if (!form.name.trim()) e.name = "Richiesto";
+    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) e.email = "Email valida richiesta";
     
-    const cleanNum = form.phone.replace(/\s+/g, "");
-    const countryPattern = COUNTRY_PHONE_PATTERNS[form.countryCode];
-    
-    if (!cleanNum) {
-      e.phone = "Veuillez entrer un numéro de téléphone";
-    } else if (countryPattern && !countryPattern.pattern.test(cleanNum)) {
-      e.phone = `Veuillez entrer un numéro valide pour ${form.countryCode} (ex: ${countryPattern.example})`;
+    const phoneError = validatePhone(form.phone, form.countryCode.toUpperCase());
+    if (phoneError) {
+      e.phone = phoneError;
     }
     
     setErrors(e);
@@ -121,9 +94,9 @@ export function Contact() {
       console.error(err);
       const rawMsg = (err instanceof Error ? err.message : "").toLowerCase();
       if (rawMsg.includes("already") || rawMsg.includes("exist") || rawMsg.includes("existe") || rawMsg.includes("contacted") || rawMsg.includes("500") || rawMsg.includes("internal server")) {
-        setApiError("You have already contacted us. Please wait while our team reviews your request. We'll get back to you soon.");
+        setApiError("Questo account esiste già. Effettua l'accesso.");
       } else {
-        setApiError("Un problème est survenu. Veuillez réessayer ou nous envoyer un e-mail directement.");
+        setApiError("Si è verificato un problema. Riprova o inviaci un'e-mail direttamente.");
       }
       setStatus("error");
     }
@@ -152,13 +125,13 @@ export function Contact() {
           <div className="text-center mb-12">
             <div className="mx-auto mb-5 flex w-fit items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-[12px] text-primary font-bold shadow-sm">
               <span className="live-dot h-1.5 w-1.5 rounded-full bg-primary" />
-              Initialiser la connexion
+              Inizializza la connessione
             </div>
             <h2 className="text-[26px] sm:text-[36px] font-bold tracking-[-0.03em] leading-[1.1] text-foreground">
-              Connectez-vous au réseau
+              Connettiti alla rete
             </h2>
             <p className="mt-4 text-[15px] sm:text-[17px] text-muted-foreground leading-relaxed max-w-lg mx-auto">
-              Partagez vos paramètres d'investissement et nos protocoles généreront une stratégie crypto sur mesure pour vous.
+              Condividi i tuoi parametri di investimento e i nostri protocolli genereranno una strategia crypto su misura per te.
             </p>
           </div>
 
@@ -183,15 +156,15 @@ export function Contact() {
                     <div className="absolute inset-0 bg-green-500/20 blur-xl rounded-full" />
                     <CheckCircle className="h-16 w-16 text-green-500 relative z-10 drop-shadow-[0_0_10px_rgba(34,197,94,0.8)]" strokeWidth={2} />
                   </motion.div>
-                  <h3 className="text-[24px] font-bold tracking-tight text-foreground mt-4">Transaction Confirmée</h3>
+                  <h3 className="text-[24px] font-bold tracking-tight text-foreground mt-4">Transazione Confermata</h3>
                   <p className="text-[15px] text-muted-foreground max-w-xs leading-relaxed">
-                    Votre message a été haché et transmis. Un opérateur réseau vous contactera sous peu.
+                    Il tuo messaggio è stato ricevuto e trasmesso. Un operatore di rete ti contatterà a breve.
                   </p>
                   <button
                     onClick={() => { setForm(EMPTY); setStatus("idle"); setErrors({}); setApiError(""); }}
                     className="mt-6 inline-flex h-11 items-center rounded-[24px] border border-border bg-background px-6 text-[14px] font-bold text-foreground hover:border-primary hover:text-primary transition-all shadow-sm"
                   >
-                    Nouvelle Transmission
+                    Nuova Trasmissione
                   </button>
                 </motion.div>
               ) : (
@@ -205,20 +178,20 @@ export function Contact() {
                 >
                   {/* Name */}
                   <div className="group">
-                    <label className="block text-sm font-medium text-muted-foreground mb-2 group-focus-within:text-primary transition-colors">Identifiant (Nom) *</label>
-                    <input type="text" placeholder="Satoshi Nakamoto" value={form.name} onChange={set("name")} className={ic("name")} />
+                    <label className="block text-sm font-medium text-muted-foreground mb-2 group-focus-within:text-primary transition-colors">Nome completo *</label>
+                    <input type="text" placeholder="Mario Rossi" value={form.name} onChange={set("name")} className={ic("name")} />
                     {errors.name && <p className="mt-1.5 text-sm text-destructive font-medium">{errors.name}</p>}
                   </div>
 
                   {/* Email + phone */}
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div className="group">
-                      <label className="block text-sm font-medium text-muted-foreground mb-2 group-focus-within:text-primary transition-colors">Clé Publique (Email) *</label>
-                      <input type="email" placeholder="satoshi@bitcoin.org" value={form.email} onChange={set("email")} className={ic("email")} />
+                      <label className="block text-sm font-medium text-muted-foreground mb-2 group-focus-within:text-primary transition-colors">Indirizzo email *</label>
+                      <input type="email" placeholder="mario.rossi@email.com" value={form.email} onChange={set("email")} className={ic("email")} />
                       {errors.email && <p className="mt-1.5 text-sm text-destructive font-medium">{errors.email}</p>}
                     </div>
                     <div className="group">
-                      <label className="block text-sm font-medium text-muted-foreground mb-2 group-focus-within:text-primary transition-colors">Canal de Com. (Téléphone) *</label>
+                      <label className="block text-sm font-medium text-muted-foreground mb-2 group-focus-within:text-primary transition-colors">Numero di telefono *</label>
                       
 <div className="flex gap-2 w-full">
     <select name="countryCode" value={form.countryCode} onChange={setCountryCode} className="country-dropdown">
@@ -253,10 +226,10 @@ export function Contact() {
 
                   {/* Message */}
                   <div className="group">
-                    <label className="block text-sm font-medium text-muted-foreground mb-2 group-focus-within:text-primary transition-colors">Payload (Message)</label>
+                    <label className="block text-sm font-medium text-muted-foreground mb-2 group-focus-within:text-primary transition-colors">Messaggio</label>
                     <textarea
                       rows={5}
-                      placeholder="Décrivez vos objectifs de yield, votre tolérance au risque et les actifs ciblés..."
+                      placeholder="Descrivi i tuoi obiettivi di rendimento, la tua tolleranza al rischio e gli asset target..."
                       value={form.message}
                       onChange={set("message")}
                       className={`${ic("message")} resize-none`}
@@ -274,7 +247,7 @@ export function Contact() {
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-6 border-t border-border">
                     <p className="text-[13px] text-muted-foreground flex items-center gap-2">
                       <Zap size={14} className="text-primary" />
-                      Chiffré de bout en bout. Zéro conservation.
+                      Crittografia end-to-end. Nessuna conservazione dei dati.
                     </p>
                     <button
                       type="submit"
@@ -286,7 +259,7 @@ export function Contact() {
                       ) : (
                         <Send className="h-4 w-4 relative z-10" />
                       )}
-                      <span className="relative z-10">{status === "loading" ? "Transmission..." : "Exécuter la Transaction"}</span>
+                      <span className="relative z-10">{status === "loading" ? "Trasmissione..." : "Invia Richiesta"}</span>
                     </button>
                   </div>
                 </motion.form>

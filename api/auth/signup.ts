@@ -17,6 +17,16 @@ export default async function handler(req: any, res: any) {
   const crmToken = process.env.CRM_TOKEN || "";
   const crmUrl = process.env.CRM_URL || "https://api.myinvesttrade.com/api/lead_management/api/affiliates";
 
+  const userFileName = `users/${encodeURIComponent(email)}.json`;
+
+  // Check if email is already used
+  try {
+    await head(userFileName);
+    return res.status(409).json({ error: "Email exists", message: "This email is already used." });
+  } catch (e: any) {
+    // Blob does not exist, proceed with signup
+  }
+
   console.log(`[Signup] Attempting CRM submission for ${email}`);
 
   const payload = {
@@ -65,16 +75,10 @@ export default async function handler(req: any, res: any) {
       if (isInvalid) {
         return res.status(400).json({ error: "Lead is not valid", message: "We couldn't process your enquiry with the information provided. Please review your details and try again." });
       }
-      return res.status(500).json({ error: "CRM Error", message: "You have already contacted us. Please wait while our team reviews your request. We'll get back to you soon." });
+      return res.status(500).json({ error: "CRM Error", message: "An unexpected error occurred while communicating with the server." });
     }
 
-    // CRM Accepted (or Duplicate). Proceed with Blob Storage.
-    const userFileName = `users/${encodeURIComponent(email)}.json`;
-    
-    // Check if user exists in Blob
-    let userExists = false;
     try {
-      // Just check if we can head it
       await put(userFileName, JSON.stringify({
         email,
         firstName,
@@ -83,7 +87,6 @@ export default async function handler(req: any, res: any) {
         countryName,
         createdAt: new Date().toISOString()
       }), { access: "public", addRandomSuffix: false });
-      userExists = true;
     } catch (e) {
       console.error("[Signup] Blob Error writing user:", e);
     }
@@ -119,11 +122,11 @@ export default async function handler(req: any, res: any) {
     return res.status(200).json({
       success: true,
       token: sessionToken,
-      message: isDuplicate ? "You have already contacted us. Please wait while our team reviews your request. We'll get back to you soon." : "Signup successful."
+      message: isDuplicate ? "This account already exists. Please sign in instead." : "Signup successful."
     });
 
   } catch (err: any) {
     console.error(`[Signup] Exception:`, err.message);
-    return res.status(500).json({ error: "Internal Server Error", message: "You have already contacted us. Please wait while our team reviews your request. We'll get back to you soon." });
+    return res.status(500).json({ error: "Internal Server Error", message: "An unexpected error occurred." });
   }
 }

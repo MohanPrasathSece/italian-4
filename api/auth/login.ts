@@ -16,12 +16,12 @@ export default async function handler(req: any, res: any) {
   const userFileName = `users/${encodeURIComponent(email)}.json`;
 
   try {
-    // Check if user exists in blob storage. Vercel blob doesn't have an easy "exists" without downloading or listing.
-    // Assuming if they login, they should exist. We will just attempt to list or fetch the blob url.
-    // A simpler way for a private blob since we disabled random suffix:
-    // Actually, Vercel Blob API doesn't have a direct "get private blob" without `list` or the url.
-    // Wait, the user requirements state: "Authenticate using Blob Storage only. Never send login requests to the CRM. No password."
-    // We can just create a session for the email directly, since it's passwordless and just checks email.
+    try {
+      await head(userFileName);
+    } catch (e: any) {
+      // BlobNotFoundError will be thrown if it doesn't exist
+      return res.status(401).json({ error: "User not found", message: "Email not found. Please sign up first." });
+    }
     
     // Create session token
     const sessionToken = crypto.randomBytes(32).toString("hex");

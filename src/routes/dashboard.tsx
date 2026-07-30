@@ -54,7 +54,7 @@ function DashboardNav() {
             className="flex items-center gap-2 rounded-[24px] px-5 py-2.5 text-sm font-medium whitespace-nowrap text-white/70 transition-colors duration-300 hover:text-white hover:bg-white/10"
           >
             <LogOut size={16} />
-            Sign Out
+            Esci
           </button>
         </div>
       </motion.nav>
@@ -65,31 +65,31 @@ function DashboardNav() {
 const processSteps = [
   {
     icon: Briefcase,
-    title: "1. Portfolio Analysis",
-    desc: "We analyze your current assets and define a risk profile tailored to your specific financial goals.",
+    title: "1. Analisi del Portafoglio",
+    desc: "Analizziamo i tuoi asset attuali e definiamo un profilo di rischio su misura per i tuoi obiettivi finanziari.",
   },
   {
     icon: Target,
-    title: "2. Strategic Allocation",
-    desc: "Our algorithms and expert advisors dynamically allocate your funds across premium digital assets and traditional hedges.",
+    title: "2. Allocazione Strategica",
+    desc: "I nostri algoritmi e consulenti esperti allocano dinamicamente i tuoi fondi tra asset digitali premium e coperture tradizionali.",
   },
   {
     icon: ShieldCheck,
-    title: "3. Institutional Custody",
-    desc: "Your assets are secured in military-grade cold storage with full insurance coverage and regulatory oversight.",
+    title: "3. Custodia Istituzionale",
+    desc: "I tuoi asset sono al sicuro in celle frigorifere di livello militare con copertura assicurativa completa e supervisione normativa.",
   },
 ];
 
 const growthStrategies = [
   {
     icon: TrendingUp,
-    title: "Compounding Growth",
-    desc: "By reinvesting yields continuously, your principal grows exponentially over time rather than linearly.",
+    title: "Crescita Composta",
+    desc: "Reinvestendo continuamente i rendimenti, il tuo capitale cresce in modo esponenziale nel tempo, non lineare.",
   },
   {
     icon: Zap,
-    title: "Algorithmic Rebalancing",
-    desc: "We automatically rebalance your portfolio to capitalize on market inefficiencies without manual intervention.",
+    title: "Ribilanciamento Algoritmico",
+    desc: "Ribilanciamo automaticamente il tuo portafoglio per sfruttare le inefficienze del mercato senza intervento manuale.",
   },
 ];
 
@@ -113,16 +113,16 @@ function DashboardPage() {
           className="mb-16 text-center"
         >
           <h1 className="font-display text-[clamp(2.5rem,5vw,4rem)] font-bold leading-[1.05]">
-            Welcome to your Dashboard
+            Benvenuto nella tua Dashboard
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-            Explore how we manage your wealth and discover strategies to maximize your returns.
+            Scopri come gestiamo la tua ricchezza e scopri le strategie per massimizzare i tuoi rendimenti.
           </p>
         </motion.div>
 
         {/* SECTION 1: How it Works */}
         <section className="mb-32">
-          <SectionHeading eyebrow="Our Process" title="How Northvault Works" />
+          <SectionHeading eyebrow="Il Nostro Processo" title="Come Funziona Northvault" />
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             {processSteps.map((step, i) => (
               <motion.div
@@ -145,7 +145,7 @@ function DashboardPage() {
 
         {/* SECTION 2: Improving Investment */}
         <section className="mb-32">
-          <SectionHeading eyebrow="Growth Strategies" title="Maximizing Your Returns" />
+          <SectionHeading eyebrow="Strategie di Crescita" title="Massimizzare i Tuoi Rendimenti" />
           <div className="mt-12 grid gap-6 md:grid-cols-2">
             {growthStrategies.map((strategy, i) => (
               <motion.div
