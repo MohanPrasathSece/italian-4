@@ -6,10 +6,7 @@ import { useAuthModal } from "./AuthModal";
 
 const links = [
   { id: "features", label: "Features" },
-  { id: "dashboard", label: "Platform" },
-  { id: "process", label: "Process" },
-  { id: "pricing", label: "Pricing" },
-  { id: "faq", label: "FAQ" },
+  { id: "why-us", label: "Why Us" },
   { id: "contact", label: "Contact" },
 ];
 
@@ -54,14 +51,14 @@ export function Nav() {
           scale: shrunk ? 0.97 : 1,
         }}
         transition={{ duration: 0.5, ease: EASE }}
-        className="glass-pill flex w-full max-w-4xl items-center gap-2 rounded-[24px] px-3 shadow-float"
+        className="flex w-full max-w-4xl items-center gap-2 rounded-[24px] px-3 bg-black/30 backdrop-blur-xl border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] transition-all duration-300"
       >
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="flex items-center gap-2 rounded-[24px] px-3 py-2"
         >
-          <Hexagon className="text-primary" size={20} strokeWidth={2.2} />
-          <span className="font-display text-[15px] font-bold tracking-tight">Northvault</span>
+          <Hexagon className="text-white" size={20} strokeWidth={2.2} />
+          <span className="font-display text-[15px] font-bold tracking-tight text-white">Northvault</span>
         </button>
 
         <div className="ml-auto hidden items-center gap-1 md:flex">
@@ -69,7 +66,7 @@ export function Nav() {
             <button
               key={l.id}
               onClick={() => go(l.id)}
-              className="relative rounded-[24px] px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              className="relative rounded-[24px] px-4 py-2 text-sm font-medium text-white/70 transition-colors hover:text-white"
             >
               {active === l.id && (
                 <motion.span

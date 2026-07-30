@@ -73,7 +73,7 @@ const features = [
   {
     icon: Sparkles,
     title: "Intelligent alerts",
-    body: "Quiet, meaningful signals — never noise — the moment your thesis needs attention.",
+    body: "Quiet, meaningful signals - never noise - the moment your thesis needs attention.",
   },
 ];
 
@@ -158,7 +158,7 @@ export function Dashboard() {
       <SectionHeading
         eyebrow="The platform"
         title="Your portfolio, beautifully understood"
-        description="One calm surface for performance, profit and allocation — no dashboards you need a manual for."
+        description="One calm surface for performance, profit and allocation - no dashboards you need a manual for."
       />
 
       <Reveal delay={0.1}>

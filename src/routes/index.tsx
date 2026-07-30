@@ -14,7 +14,7 @@ import {
 import { Contact } from "@/components/landing/Contact";
 import { AuthModalProvider } from "@/components/landing/AuthModal";
 
-const title = "Northvault — Invest Smarter in Digital Assets";
+const title = "Northvault - Invest Smarter in Digital Assets";
 const description =
   "Northvault is a calm, insured, institutional-grade platform for building long-term wealth across bitcoin, ethereum and managed digital asset portfolios.";
 
@@ -63,16 +63,8 @@ function Index() {
       <Nav />
       <main>
         <Hero />
-        <Marquee />
         <Features />
         <WhyUs />
-        <Dashboard />
-        <Process />
-        <Testimonials />
-        <Stats />
-        <Pricing />
-        <FAQ />
-        <FinalCTA />
         <Contact />
       </main>
       <Footer />

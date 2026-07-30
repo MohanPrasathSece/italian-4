@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { ArrowRight, Check, Minus, Plus, Star } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { CountUp, EASE, FloatCard, Magnetic, Reveal, SectionHeading } from "./primitives";
 
 const testimonials = [
@@ -270,7 +271,7 @@ export function Footer() {
         <p className="text-sm text-muted-foreground">
           © {new Date().getFullYear()} Northvault Capital. Capital at risk.
         </p>
-        <div className="flex gap-6 text-sm text-muted-foreground">
+        <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
           <a href="#features" className="transition-colors hover:text-primary">
             Platform
           </a>
@@ -280,6 +281,12 @@ export function Footer() {
           <a href="#faq" className="transition-colors hover:text-primary">
             Support
           </a>
+          <Link to="/privacy" className="transition-colors hover:text-primary">
+            Privacy
+          </Link>
+          <Link to="/terms" className="transition-colors hover:text-primary">
+            Terms
+          </Link>
         </div>
       </div>
     </footer>

@@ -1,159 +1,301 @@
+import { AnimatePresence, motion } from "framer-motion";
+import { CheckCircle, Loader2, Send, Zap } from "lucide-react";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Check, Mail, MapPin, Phone } from "lucide-react";
-import { EASE, Reveal, SectionHeading } from "./primitives";
+import { submitLead } from "@/lib/crmApi";
 
-const details = [
-  { icon: Mail, label: "Email", value: "advisors@northvault.com" },
-  { icon: Phone, label: "Phone", value: "+44 20 7946 0112" },
-  { icon: MapPin, label: "Office", value: "12 Finsbury Circus, London" },
+// ─── Constants ─────────────────────────────────────────────────────
+
+const INVESTMENT_OPTIONS = [
+  { value: "", label: "Select amount…" },
+  { value: "under_1000", label: "Under $1,000" },
+  { value: "1000", label: "$1,000 – $4,999" },
+  { value: "5000", label: "$5,000 – $9,999" },
+  { value: "10000", label: "$10,000 – $24,999" },
+  { value: "25000", label: "$25,000 – $49,999" },
+  { value: "50000", label: "$50,000 – $99,999" },
+  { value: "100000", label: "$100,000+" },
 ];
 
-export function Contact() {
-  const [sent, setSent] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+const COUNTRY_OPTIONS = [
+  { value: "cy", label: "Cyprus" },
+  { value: "gb", label: "United Kingdom" },
+  { value: "us", label: "United States" },
+  { value: "de", label: "Germany" },
+  { value: "fr", label: "France" },
+  { value: "ae", label: "UAE" },
+  { value: "sg", label: "Singapore" },
+  { value: "au", label: "Australia" },
+  { value: "other", label: "Other" },
+];
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    const name = String(data.get("name") ?? "").trim();
-    const email = String(data.get("email") ?? "").trim();
-    const message = String(data.get("message") ?? "").trim();
-    const next: Record<string, string> = {};
-    if (!name || name.length > 100) next.name = "Please enter your name (max 100 characters).";
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || email.length > 255)
-      next.email = "Please enter a valid email address.";
-    if (!message || message.length > 1000)
-      next.message = "Please enter a message (max 1000 characters).";
-    setErrors(next);
-    if (Object.keys(next).length) return;
-    e.currentTarget.reset();
-    setSent(true);
-    setTimeout(() => setSent(false), 4000);
-  };
+const COUNTRY_PHONE_PATTERNS: Record<string, { code: string; pattern: RegExp; example: string }> = {
+  IE: { code: "+353", pattern: /^8\d{8}$/, example: "87 123 4567" },
+  CH: { code: "+41", pattern: /^(\+41|0041|0)?[1-9]\d{8}$/, example: "079 123 45 67" },
+  FR: { code: "+33", pattern: /^(\+33|0033|0)?[1-9]\d{8}$/, example: "06 12 34 56 78" },
+  BE: { code: "+32", pattern: /^(\+32|0032|0)?[1-9]\d{8}$/, example: "0471 12 34 56" },
+  CA: { code: "+1", pattern: /^(\+1|001)?[2-9]\d{9}$/, example: "416 555 0123" },
+  US: { code: "+1", pattern: /^(\+1|001)?[2-9]\d{9}$/, example: "212 555 0123" },
+  GB: { code: "+44", pattern: /^(\+44|0044|0)?[1-9]\d{9,10}$/, example: "07700 900123" },
+  DE: { code: "+49", pattern: /^(\+49|0049|0)?[1-9]\d{8,11}$/, example: "0152 12345678" },
+  ES: { code: "+34", pattern: /^(\+34|0034|0)?[6-9]\d{8}$/, example: "612 345 678" },
+  IT: { code: "+39", pattern: /^(\+39|0039|0)?[3]\d{8,9}$/, example: "312 3456789" },
+  NL: { code: "+31", pattern: /^(\+31|0031|0)?[6]\d{8}$/, example: "06 12345678" },
+  SE: { code: "+46", pattern: /^(\+46|0046|0)?[7-9]\d{8}$/, example: "070 123 45 67" },
+  AU: { code: "+61", pattern: /^(\+61|0061|0)?[4]\d{8}$/, example: "0412 345 678" },
+  IN: { code: "+91", pattern: /^(\+91|0091|0)?[6-9]\d{9}$/, example: "98765 43210" },
+  AE: { code: "+971", pattern: /^(\+971|00971)?[5]\d{8}$/, example: "50 123 4567" },
+  SG: { code: "+65", pattern: /^(\+65|0065)?[8-9]\d{7}$/, example: "8123 4567" },
+  ZA: { code: "+27", pattern: /^(\+27|0027|0)?[6-8]\d{8}$/, example: "082 123 4567" },
+  BR: { code: "+55", pattern: /^(\+55|0055)?[1-9]\d{10}$/, example: "11 91234 5678" },
+  MX: { code: "+52", pattern: /^(\+52|0052)?[1-9]\d{10}$/, example: "55 1234 5678" },
+  JP: { code: "+81", pattern: /^(\+81|0081|0)?[7-9]\d{8,9}$/, example: "090 1234 5678" },
+  CY: { code: "+357", pattern: /^(\+357|00357)?[2-9]\d{7}$/, example: "99 123456" },
+};
 
-  return (
-    <section id="contact" className="scroll-mt-28 px-4 py-24">
-      <SectionHeading
-        eyebrow="Contact"
-        title="Speak with an advisor"
-        description="Tell us about your allocation and we will reply within one business day."
-      />
-      <div className="mx-auto mt-16 grid max-w-6xl gap-6 lg:grid-cols-[0.85fr_1.15fr]">
-        <Reveal className="h-full">
-          <div className="flex h-full flex-col justify-between gap-10 rounded-[40px] border border-border bg-card p-10 shadow-float">
-            <div className="space-y-7">
-              {details.map((d) => (
-                <div key={d.label} className="flex items-start gap-4">
-                  <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-accent text-primary">
-                    <d.icon size={18} />
-                  </span>
-                  <div>
-                    <p className="text-sm text-muted-foreground">{d.label}</p>
-                    <p className="mt-0.5 font-medium">{d.value}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              Prefer a call? Advisors are available Monday to Friday, 8am–7pm GMT.
-            </p>
-          </div>
-        </Reveal>
+// ─── Types ─────────────────────────────────────────────────────────
 
-        <Reveal delay={0.1}>
-          <form
-            onSubmit={onSubmit}
-            noValidate
-            className="rounded-[40px] border border-border bg-card p-10 shadow-lift"
-          >
-            <div className="grid gap-4 sm:grid-cols-2">
-              <FormField name="name" label="Full name" placeholder="Amelia Hart" error={errors.name} />
-              <FormField
-                name="email"
-                type="email"
-                label="Email"
-                placeholder="you@company.com"
-                error={errors.email}
-              />
-            </div>
-            <div className="mt-4">
-              <FormField
-                name="message"
-                label="Message"
-                placeholder="I'd like to discuss a $250k allocation…"
-                textarea
-                error={errors.message}
-              />
-            </div>
-
-            <div className="mt-7 flex flex-wrap items-center gap-4">
-              <button
-                type="submit"
-                className="group inline-flex items-center gap-2 rounded-[24px] bg-primary px-7 py-3.5 text-[15px] font-medium text-primary-foreground transition-all duration-500 hover:bg-primary-hover hover:shadow-lift"
-              >
-                Send message
-                <ArrowRight
-                  size={17}
-                  className="transition-transform duration-500 group-hover:translate-x-1"
-                />
-              </button>
-              <AnimatePresence>
-                {sent && (
-                  <motion.span
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.45, ease: EASE }}
-                    className="inline-flex items-center gap-2 text-sm font-medium text-primary"
-                  >
-                    <Check size={16} /> Thank you — we'll be in touch shortly.
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </div>
-          </form>
-        </Reveal>
-      </div>
-    </section>
-  );
+interface FormState {
+  name: string;
+  email: string;
+  phone: string;
+  countryCode: string;
+  message: string;
 }
 
-function FormField({
-  name,
-  label,
-  placeholder,
-  type = "text",
-  textarea = false,
-  error,
-}: {
-  name: string;
-  label: string;
-  placeholder: string;
-  type?: string;
-  textarea?: boolean;
-  error?: string;
-}) {
-  const base =
-    "mt-2 w-full rounded-[24px] border border-border bg-background px-5 py-3.5 text-[15px] outline-none transition-colors duration-300 placeholder:text-muted-foreground focus:border-primary/40";
+const EMPTY: FormState = {
+  name: "",
+  email: "",
+  phone: "",
+  countryCode: "CH",
+  message: "",
+};
+
+// ─── Component ─────────────────────────────────────────────────────
+
+export function Contact() {
+  const [form, setForm] = useState<FormState>(EMPTY);
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
+  const [apiError, setApiError] = useState("");
+
+  const set = (field: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm((f) => ({ ...f, [field]: e.target.value }));
+
+  const setCountryCode = (e: React.ChangeEvent<HTMLSelectElement>) =>
+    setForm((f) => ({ ...f, countryCode: e.target.value }));
+
+  const validate = (): boolean => {
+    const e: Partial<Record<keyof FormState, string>> = {};
+    if (!form.name.trim()) e.name = "Requis";
+    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) e.email = "E-mail valide requis";
+    
+    const cleanNum = form.phone.replace(/\s+/g, "");
+    const countryPattern = COUNTRY_PHONE_PATTERNS[form.countryCode];
+    
+    if (!cleanNum) {
+      e.phone = "Veuillez entrer un numéro de téléphone";
+    } else if (countryPattern && !countryPattern.pattern.test(cleanNum)) {
+      e.phone = `Veuillez entrer un numéro valide pour ${form.countryCode} (ex: ${countryPattern.example})`;
+    }
+    
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
+    setStatus("loading");
+    setApiError("");
+    try {
+      await submitLead({
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        countryCode: form.countryCode,
+        message: form.message,
+        leadType: "contact",
+      });
+      setStatus("success");
+    } catch (err) {
+      console.error(err);
+      const rawMsg = (err instanceof Error ? err.message : "").toLowerCase();
+      if (rawMsg.includes("already") || rawMsg.includes("exist") || rawMsg.includes("existe") || rawMsg.includes("contacted") || rawMsg.includes("500") || rawMsg.includes("internal server")) {
+        setApiError("You have already contacted us. Please wait while our team reviews your request. We'll get back to you soon.");
+      } else {
+        setApiError("Un problème est survenu. Veuillez réessayer ou nous envoyer un e-mail directement.");
+      }
+      setStatus("error");
+    }
+  };
+
+  const ic = (field: keyof FormState) =>
+    `w-full rounded-[24px] border ${errors[field] ? "border-destructive focus:border-destructive shadow-sm" : "border-border focus:border-primary/40"} bg-background px-5 py-3.5 text-[15px] text-foreground placeholder:text-muted-foreground outline-none transition-colors duration-300`;
+
   return (
-    <div>
-      <label htmlFor={name} className="text-sm font-medium text-muted-foreground">
-        {label}
-      </label>
-      {textarea ? (
-        <textarea id={name} name={name} rows={5} maxLength={1000} placeholder={placeholder} className={base} />
-      ) : (
-        <input
-          id={name}
-          name={name}
-          type={type}
-          maxLength={255}
-          placeholder={placeholder}
-          className={base}
-        />
-      )}
-      {error && <p className="mt-2 text-sm text-primary">{error}</p>}
-    </div>
+    <section id="contact" className="relative overflow-hidden py-24 sm:py-32 bg-background scroll-mt-28">
+      {/* Ambient glow */}
+      <motion.div 
+        animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(251,191,36,0.15)_0%,transparent_70%)]" 
+      />
+
+      <div className="relative mx-auto max-w-3xl px-5 sm:px-6 lg:px-10 z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {/* Header */}
+          <div className="text-center mb-12">
+            <div className="mx-auto mb-5 flex w-fit items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-[12px] text-primary font-bold shadow-sm">
+              <span className="live-dot h-1.5 w-1.5 rounded-full bg-primary" />
+              Initialiser la connexion
+            </div>
+            <h2 className="text-[26px] sm:text-[36px] font-bold tracking-[-0.03em] leading-[1.1] text-foreground">
+              Connectez-vous au réseau
+            </h2>
+            <p className="mt-4 text-[15px] sm:text-[17px] text-muted-foreground leading-relaxed max-w-lg mx-auto">
+              Partagez vos paramètres d'investissement et nos protocoles généreront une stratégie crypto sur mesure pour vous.
+            </p>
+          </div>
+
+          {/* Card */}
+          <div className="relative rounded-[40px] border border-border bg-card p-6 sm:p-10 shadow-lift">
+            <AnimatePresence mode="wait">
+              {/* ── Success ── */}
+              {status === "success" ? (
+                <motion.div
+                  key="success"
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  className="flex flex-col items-center justify-center gap-4 py-14 text-center"
+                >
+                  <motion.div
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
+                    className="relative"
+                  >
+                    <div className="absolute inset-0 bg-green-500/20 blur-xl rounded-full" />
+                    <CheckCircle className="h-16 w-16 text-green-500 relative z-10 drop-shadow-[0_0_10px_rgba(34,197,94,0.8)]" strokeWidth={2} />
+                  </motion.div>
+                  <h3 className="text-[24px] font-bold tracking-tight text-foreground mt-4">Transaction Confirmée</h3>
+                  <p className="text-[15px] text-muted-foreground max-w-xs leading-relaxed">
+                    Votre message a été haché et transmis. Un opérateur réseau vous contactera sous peu.
+                  </p>
+                  <button
+                    onClick={() => { setForm(EMPTY); setStatus("idle"); setErrors({}); setApiError(""); }}
+                    className="mt-6 inline-flex h-11 items-center rounded-[24px] border border-border bg-background px-6 text-[14px] font-bold text-foreground hover:border-primary hover:text-primary transition-all shadow-sm"
+                  >
+                    Nouvelle Transmission
+                  </button>
+                </motion.div>
+              ) : (
+                /* ── Form ── */
+                <motion.form
+                  key="form"
+                  onSubmit={handleSubmit}
+                  className="space-y-6"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
+                  {/* Name */}
+                  <div className="group">
+                    <label className="block text-sm font-medium text-muted-foreground mb-2 group-focus-within:text-primary transition-colors">Identifiant (Nom) *</label>
+                    <input type="text" placeholder="Satoshi Nakamoto" value={form.name} onChange={set("name")} className={ic("name")} />
+                    {errors.name && <p className="mt-1.5 text-sm text-destructive font-medium">{errors.name}</p>}
+                  </div>
+
+                  {/* Email + phone */}
+                  <div className="grid sm:grid-cols-2 gap-6">
+                    <div className="group">
+                      <label className="block text-sm font-medium text-muted-foreground mb-2 group-focus-within:text-primary transition-colors">Clé Publique (Email) *</label>
+                      <input type="email" placeholder="satoshi@bitcoin.org" value={form.email} onChange={set("email")} className={ic("email")} />
+                      {errors.email && <p className="mt-1.5 text-sm text-destructive font-medium">{errors.email}</p>}
+                    </div>
+                    <div className="group">
+                      <label className="block text-sm font-medium text-muted-foreground mb-2 group-focus-within:text-primary transition-colors">Canal de Com. (Téléphone) *</label>
+                      
+<div className="flex gap-2 w-full">
+    <select name="countryCode" value={form.countryCode} onChange={setCountryCode} className="country-dropdown">
+
+        <option value="IE">🇮🇪 +353</option>
+        <option value="GB">🇬🇧 +44</option>
+        <option value="CH">🇨🇭 +41</option>
+        <option value="FR">🇫🇷 +33</option>
+        <option value="BE">🇧🇪 +32</option>
+        <option value="CA">🇨🇦 +1</option>
+        <option value="US">🇺🇸 +1</option>
+        <option value="DE">🇩🇪 +49</option>
+        <option value="ES">🇪🇸 +34</option>
+        <option value="IT">🇮🇹 +39</option>
+        <option value="NL">🇳🇱 +31</option>
+        <option value="SE">🇸🇪 +46</option>
+        <option value="AU">🇦🇺 +61</option>
+        <option value="IN">🇮🇳 +91</option>
+        <option value="AE">🇦🇪 +971</option>
+        <option value="SG">🇸🇬 +65</option>
+        <option value="ZA">🇿🇦 +27</option>
+        <option value="BR">🇧🇷 +55</option>
+        <option value="MX">🇲🇽 +52</option>
+        <option value="JP">🇯🇵 +81</option>
+        <option value="CY">🇨🇾 +357</option>
+    </select>
+<input type="tel" placeholder="+357 99 261 501" value={form.phone} onChange={set("phone")} className={`${ic("phone")} flex-1`} />
+</div>
+                      {errors.phone && <p className="mt-1.5 text-sm text-destructive font-medium">{errors.phone}</p>}
+                    </div>
+                  </div>
+
+                  {/* Message */}
+                  <div className="group">
+                    <label className="block text-sm font-medium text-muted-foreground mb-2 group-focus-within:text-primary transition-colors">Payload (Message)</label>
+                    <textarea
+                      rows={5}
+                      placeholder="Décrivez vos objectifs de yield, votre tolérance au risque et les actifs ciblés..."
+                      value={form.message}
+                      onChange={set("message")}
+                      className={`${ic("message")} resize-none`}
+                    />
+                  </div>
+
+                  {/* API error */}
+                  {apiError && (
+                    <div className="rounded-[24px] border border-destructive/50 bg-destructive/10 px-5 py-4 text-sm text-destructive font-medium shadow-sm">
+                      {apiError}
+                    </div>
+                  )}
+
+                  {/* Submit */}
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-6 border-t border-border">
+                    <p className="text-[13px] text-muted-foreground flex items-center gap-2">
+                      <Zap size={14} className="text-primary" />
+                      Chiffré de bout en bout. Zéro conservation.
+                    </p>
+                    <button
+                      type="submit"
+                      disabled={status === "loading"}
+                      className="group relative inline-flex h-12 items-center justify-center gap-2 rounded-[24px] bg-primary px-8 text-[15px] font-medium text-primary-foreground hover:bg-primary-hover transition-all shadow-lift disabled:opacity-60 whitespace-nowrap shrink-0"
+                    >
+                      {status === "loading" ? (
+                        <Loader2 className="h-4 w-4 animate-spin relative z-10" />
+                      ) : (
+                        <Send className="h-4 w-4 relative z-10" />
+                      )}
+                      <span className="relative z-10">{status === "loading" ? "Transmission..." : "Exécuter la Transaction"}</span>
+                    </button>
+                  </div>
+                </motion.form>
+              )}
+            </AnimatePresence>
+          </div>
+
+        </motion.div>
+      </div>
+    </section>
   );
 }

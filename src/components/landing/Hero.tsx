@@ -39,7 +39,7 @@ export function Hero() {
             <TrendingUp size={14} /> Regulated digital asset management
           </motion.span>
 
-          <h1 className="mt-8 text-[clamp(3rem,6.4vw,5.6rem)] leading-[0.98] font-bold">
+          <h1 className="mt-8 text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.05] font-bold">
             {words.map((w, i) => (
               <motion.span
                 key={w + i}
