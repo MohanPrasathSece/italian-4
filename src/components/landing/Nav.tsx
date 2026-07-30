@@ -2,6 +2,7 @@ import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Hexagon } from "lucide-react";
 import { EASE, Magnetic } from "./primitives";
+import { useAuthModal } from "./AuthModal";
 
 const links = [
   { id: "features", label: "Features" },
@@ -9,10 +10,12 @@ const links = [
   { id: "process", label: "Process" },
   { id: "pricing", label: "Pricing" },
   { id: "faq", label: "FAQ" },
+  { id: "contact", label: "Contact" },
 ];
 
 export function Nav() {
   const { scrollY } = useScroll();
+  const auth = useAuthModal();
   const [shrunk, setShrunk] = useState(false);
   const [active, setActive] = useState("features");
 
@@ -80,14 +83,22 @@ export function Nav() {
           ))}
         </div>
 
-        <Magnetic strength={0.25} className="ml-auto md:ml-2">
+        <div className="ml-auto flex items-center gap-2 md:ml-2">
           <button
-            onClick={() => go("cta")}
-            className="rounded-[24px] bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors duration-300 hover:bg-primary-hover"
+            onClick={() => auth.open("login")}
+            className="hidden rounded-[24px] px-4 py-2.5 text-sm font-medium text-muted-foreground transition-colors duration-300 hover:text-foreground sm:block"
           >
-            Start Investing
+            Sign in
           </button>
-        </Magnetic>
+          <Magnetic strength={0.25}>
+            <button
+              onClick={() => auth.open("signup")}
+              className="rounded-[24px] bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors duration-300 hover:bg-primary-hover"
+            >
+              Start Investing
+            </button>
+          </Magnetic>
+        </div>
       </motion.nav>
     </motion.header>
   );
