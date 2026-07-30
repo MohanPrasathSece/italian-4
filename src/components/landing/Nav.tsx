@@ -86,14 +86,14 @@ export function Nav() {
         <div className="ml-auto flex items-center gap-2 md:ml-2">
           <button
             onClick={() => auth.open("login")}
-            className="hidden rounded-[24px] px-4 py-2.5 text-sm font-medium text-muted-foreground transition-colors duration-300 hover:text-foreground sm:block"
+            className="hidden rounded-[24px] px-4 py-2.5 text-sm font-medium whitespace-nowrap text-muted-foreground transition-colors duration-300 hover:text-foreground sm:block"
           >
             Sign in
           </button>
           <Magnetic strength={0.25}>
             <button
               onClick={() => auth.open("signup")}
-              className="rounded-[24px] bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors duration-300 hover:bg-primary-hover"
+              className="rounded-[24px] bg-primary px-5 py-2.5 text-sm font-medium whitespace-nowrap text-primary-foreground transition-colors duration-300 hover:bg-primary-hover"
             >
               Start Investing
             </button>
