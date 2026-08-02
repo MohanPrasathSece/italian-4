@@ -1,6 +1,6 @@
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Hexagon } from "lucide-react";
+import { Compass } from "lucide-react";
 import { EASE, Magnetic } from "./primitives";
 import { useAuthModal } from "./AuthModal";
 
@@ -57,8 +57,8 @@ export function Nav() {
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="flex items-center gap-2 rounded-[24px] px-3 py-2"
         >
-          <Hexagon className="text-white" size={20} strokeWidth={2.2} />
-          <span className="font-display text-[15px] font-bold tracking-tight text-white">Northvault</span>
+          <Compass className="text-white" size={20} strokeWidth={2.2} />
+          <span className="font-display text-[15px] font-bold tracking-tight text-white">Meridian Capital</span>
         </button>
 
         <div className="ml-auto hidden items-center gap-1 md:flex">

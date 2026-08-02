@@ -101,7 +101,7 @@ export function Hero() {
           <div className="float-slow overflow-hidden rounded-[30px] border border-border bg-card shadow-lift">
             <img
               src={dashboardImg}
-              alt="Dashboard del portafoglio Northvault che mostra valore totale, allocazione e partecipazioni"
+              alt="Dashboard del portafoglio Meridian Capital che mostra valore totale, allocazione e partecipazioni"
               width={1408}
               height={1008}
               className="w-full"

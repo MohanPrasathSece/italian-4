@@ -125,7 +125,7 @@ export function WhyUs() {
         <div>
           <SectionHeading
             align="left"
-            eyebrow="Perché Northvault"
+            eyebrow="Perché Meridian Capital"
             title="Costruito da chi gestisce capitali di professione"
             description="Combiniamo la disciplina delle banche private con la trasparenza che gli asset digitali avrebbero dovuto avere sin dall'inizio."
           />

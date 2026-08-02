@@ -193,7 +193,7 @@ const faqs = [
     a: "Ogni account produce resoconti annuali pronti per le tasse con plusvalenze, reddito e costi base nella tua valuta locale.",
   },
   {
-    q: "Northvault è regolamentata?",
+    q: "Meridian Capital è regolamentata?",
     a: "Operiamo tramite una società di investimento con licenza, verificata trimestralmente, con fondi e asset dei clienti tenuti separati dai nostri.",
   },
 ];
@@ -267,9 +267,9 @@ export function Footer() {
   return (
     <footer className="px-4 pt-10 pb-14">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 border-t border-border pt-10 sm:flex-row">
-        <p className="font-display font-bold">Northvault</p>
+        <p className="font-display font-bold">Meridian Capital</p>
         <p className="text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Northvault Capital. Capitale a rischio.
+          © {new Date().getFullYear()} Meridian Capital. Capitale a rischio.
         </p>
         <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
           <a href="#features" className="transition-colors hover:text-primary">

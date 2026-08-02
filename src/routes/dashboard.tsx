@@ -45,7 +45,7 @@ function DashboardNav() {
           className="flex items-center gap-2 rounded-[24px] px-3 py-2"
         >
           <Hexagon className="text-white" size={20} strokeWidth={2.2} />
-          <span className="font-display text-[15px] font-bold tracking-tight text-white">Northvault</span>
+          <span className="font-display text-[15px] font-bold tracking-tight text-white">Meridian Capital</span>
         </button>
 
         <div className="ml-auto flex items-center gap-2">
@@ -122,7 +122,7 @@ function DashboardPage() {
 
         {/* SECTION 1: How it Works */}
         <section className="mb-32">
-          <SectionHeading eyebrow="Il Nostro Processo" title="Come Funziona Northvault" />
+          <SectionHeading eyebrow="Il Nostro Processo" title="Come Funziona Meridian Capital" />
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             {processSteps.map((step, i) => (
               <motion.div
